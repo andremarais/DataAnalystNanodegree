@@ -1,0 +1,58 @@
+---
+title: "P1"
+author: "Andre Marais"
+output: html_document
+---
+**Question 1: Identify variables in the experiment** </br>
+  1. Independent variable would be the actual words used in the both the congruent and incongruent tests.  </br>
+  2. The dependent variable would be the measured reading time </br></br>
+
+**Question 2: Establish a hypothesis and statistical test**
+
+We want to test if there's a difference in reading speed between the Congruent words and Incongruent words. The null hypothesis would be there is no difference in reading time, and in turn the alternative would state that there *is* a difference. </br>
+Stated formally: </br>
+**H~0~:** There is not differnce in reading time between the Congruent and Incongruent words </br>
+**H~1~:** There is a difference in reading time between the Congruent and Incongruent words </br>
+Or rather: </br>
+**H~0~:** &mu;~C~ = &mu;~I~ </br>
+**H~1~:** &mu;~C~ &ne; &mu;~I~ </br>
+Where &mu;~C~ signifies the mean reading time for the Congruent test, and &mu;~I~ the mean reading time for the Incongruent test </br> </br>
+We should use the two-tailed t-test. We don't know what the population parameters are, so we can't use the normal distriution. Two-tailed because we're testing for a *difference*, and not if there's a directional difference between the congruent and incongruent reading times.  </br></br>
+
+**Question 3: Report descriptive statistics**
+
+Average of reading times:
+```{r, echo=FALSE,cache=TRUE}
+stroop <- read.csv("C:/Github/DataAnalystNanodegree/P1/stroopdata.csv")
+stroop$Difference <- stroop$Incongruent - stroop$Congruent
+apply(stroop,2, FUN = "mean")
+
+```
+Standard error of reading times:
+```{r,echo=F}
+apply(stroop, 2, FUN = function(x) sd(x) / sqrt(length(x)) )
+```
+
+**Question 4: Plot the data**
+
+```{r, echo=FALSE,message=FALSE}
+require(ggplot2)
+ggplot(stroop) + 
+  geom_density(aes(x = Congruent), fill = "thistle3", col = "thistle4", alpha = .8, size = 1) + 
+  geom_density(aes(x = Incongruent), fill = "lightsteelblue3", col = "lightsteelblue4", alpha = .8, size = 1) +
+  xlab("Seconds") +
+  ggtitle("Density plot of time take to complete test\nPurple: Congruent | Blue: Incongruent") +
+  geom_vline(xintercept  = mean(stroop$Congruent), col = "thistle4", linetype = "longdash", size = 1)+
+  geom_vline(xintercept  = mean(stroop$Incongruent), col = "lightsteelblue4", linetype = "longdash", size = 1)+
+  annotate("text", label = paste("Congruent mean", round(mean(stroop$Congruent),2)), x =mean(stroop$Congruent) , y = .02, col = "thistle4") +
+  annotate("text", label = paste("Incongruent mean", round(mean(stroop$Incongruent),2)), x =mean(stroop$Incongruent) , y = .01, col = "lightsteelblue4") 
+
+```
+</br>From the graph you can see there's an increase in reading time for the Incongruent test. Barring the outliers, it seems like the reading times might follow a normal distribution.  </br>
+
+**Question 5: Perform the statistical test and interpret your results**
+
+As stated previously, we'll be using a two-tailed t-test to see if there's a significant difference in reading times between the Congruent and Incongruent tests. We can use the conventional &alpha; value of 0.05. Since the sample size 24`(n)`, the Degrees of Freedom is 23 `(n-1)`. Using this information, we can derive that the critial values of the t-statistic are -2.069 and +2.069. 
+
+Since we're only testing for a difference, and not *how much of* a difference, we'll be using this formula to calculate the t-statistic for the mean differences: $t = \frac{\overline{x}_{D} - 0}{s/\sqrt{n}}$, 
+where $\overline{x}_{D}$ signifies the average of the differences and $s$ the standerd deviation of the differences. 
