@@ -1,21 +1,21 @@
 ---
 title: "P1: Test a Perceptual Phenomenon"
 author: "Andre Marais"
-date: "Thursday, July 30, 2015"
+date: "Sunday, August 2, 2015"
 output: html_document
 ---
 
 
-
+</br>
 **Question 1: Identify variables in the experiment** </br>
-  1. Independent variable would be the actual words used in the both the congruent and incongruent tests.  </br>
+  1. Independent variable would be the two test, or the actual words that were used in the both the congruent and incongruent tests.  </br>
   2. The dependent variable would be the measured reading time </br></br>
 
 
 **Question 2: Establish a hypothesis and statistical test** </br>
 We want to test if there's a difference in reading speed between the Congruent words and Incongruent words. The null hypothesis would be there is no difference in reading time, and in turn the alternative would state that there *is* a difference. </br>
 Stated formally: </br>
-**H~0~:** There is not difference in reading time between the Congruent and Incongruent words </br>
+**H~0~:** There is no difference in reading time between the Congruent and Incongruent words </br>
 **H~1~:** There is a difference in reading time between the Congruent and Incongruent words </br>
 Or rather: </br>
 **H~0~:** &mu;~C~ = &mu;~I~ </br>
@@ -23,20 +23,24 @@ Or rather: </br>
 Where &mu;~C~ signifies the mean reading time for the Congruent test, and &mu;~I~ the mean reading time for the Incongruent test </br> </br>
 We should use the two-tailed t-test. We don't know what the population parameters are, so we can't use the normal distribution. Two-tailed because we're testing for a *difference*, and not if there's a directional difference between the congruent and incongruent reading times.  </br></br>
 
-**Question 3: Report descriptive statistics**
+**Question 3: Report descriptive statistics**</br>
 Average of reading times:
-```{r, echo=FALSE,cache=TRUE,message=F}
+```{r, echo=FALSE,message=F}
 require(ggplot2)
 require(stats)
 stroop <- read.csv("C:/Github/DataAnalystNanodegree/P1/stroopdata.csv")
 stroop$Difference <- stroop$Incongruent - stroop$Congruent
 apply(stroop,2, FUN = "mean")
-
 ```
-Standard error of reading times:
+Standard deviation of reading times:
 ```{r,echo=F}
-apply(stroop, 2, FUN = function(x) sd(x) / sqrt(length(x)) )
+apply(stroop, 2, FUN = function(x) sd(x))
 ```
+Standard error of mean reading times:
+```{r, echo=FALSE}
+apply(stroop,2, FUN = function(x) (mean(x)/(sd(x)/sqrt(length(x)))))
+```
+
 
 
 **Question 4: Plot the data** </br>
@@ -60,10 +64,10 @@ As stated previously, we'll be using a two-tailed t-test to see if there's a sig
 
 Since we're only testing for a difference, and not *how much of* a difference, we'll be using this formula to calculate the t-statistic for the mean differences: $t = \frac{\overline{x}_{D} - 0}{s/\sqrt{n}}$, 
 where $\overline{x}_{D}$ signifies the average of the differences and $s$ the standard deviation of the differences.  </br>
-Calculating the t-statistic: $t = \frac{7.964792 - 0}{0.9930286/\sqrt{24}} = 39.29328$ </br>
-Since $39.29328$ is larger than $2.068658$, we can reject the null hypthesis in favor of the alternative. </br>
+Calculating the t-statistic: $t = \frac{7.964792 - 0}{4.864827/\sqrt{24}} = 8.0207$ </br>
+Since $8.0207$ is larger than $2.068658$, we can reject the null hypthesis in favor of the alternative. </br>
 
-This is in line with our expectations. When you do the test, you can see that things get complicated when the words and font colours don't align. It's also quite obvious that there's a difference when you look at the density plots. Calculating Cohen's d: $\frac{M_{D}}{S_{D}} = \frac{7.964792}{0.9930286} = 8.020708$, which means that the standardized difference between the Congruent and Incongruent means is around 8 seconds. </br>
+This is in line with our expectations. When you do the test yourself, you can see that things get complicated when the words and font colours don't align. It's also quite obvious that there's a difference when you look at the density plots. Calculating Cohen's d: $\frac{M_{D}}{S_{D}} = \frac{7.964792}{0.9930286} = 8.020708$, which means that the standardized difference between the Congruent and Incongruent means is around 8 seconds. </br>
 
 **Question 6: Digging deeper and extending the investigation**</br>
 I imagine there are two different parts of your brain which deciphers what you see - one for colour and the other for the word itself. When both the word and the color are the same, there's no issue. But when they differ, your brain might need to do a double-check before you can decide what the correct answer is. Using arrows with embedded words might also be a test which can measure this effect. For instance the first screen have arrows with the appropriate direction imbedded onto them (ie an up arrow has the word 'up' written on it). The second screen would naturally have the words and directions mixed up. 

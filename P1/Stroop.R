@@ -35,6 +35,6 @@ stroop.std.errors <- apply(stroop, 2, FUN = "std.error")
 
 t.value <- (stroop.means$) / stroop.std.errors[3]
 
-critical.value <- qt(.05, length(stroop$difference) -1, lower.tail =  T)
+critical.value <- qt(.025, length(stroop$difference) -1, lower.tail =  T)
 
 
