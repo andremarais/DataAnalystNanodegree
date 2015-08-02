@@ -13,15 +13,13 @@ output: html_document
 
 
 **Question 2: Establish a hypothesis and statistical test** </br>
-We want to test if there's a difference in reading speed between the Congruent words and Incongruent words. The null hypothesis would be there is no difference in reading time, and in turn the alternative would state that there *is* a difference. </br>
+We want to test if there's a difference in the completion times between the Congruent and Incongruent tests. Since the test measures the reading time in seconds for both tests, we'll use the average of the differences between the Congruent and Incongruent completion times to test our hypothesis. It seems reasonable to test if it takes *longer* to complete the Incongruent test. So the null hypothesis would be that the Incongruent completion times come from a population where the mean is at the very most equal to the Congruent population's mean. The alternative hypothesis would then state that the Incongruent completion times come from a population with a mean larger than that of the Congruent population's. 
+
 Stated formally: </br>
-**H~0~:** There is no difference in reading time between the Congruent and Incongruent words </br>
-**H~1~:** There is a difference in reading time between the Congruent and Incongruent words </br>
-Or rather: </br>
-**H~0~:** &mu;~C~ = &mu;~I~ </br>
-**H~1~:** &mu;~C~ &ne; &mu;~I~ </br>
-Where &mu;~C~ signifies the mean reading time for the Congruent test, and &mu;~I~ the mean reading time for the Incongruent test </br> </br>
-We should use the paired samples t-test, since we have the reading time of each subject on both the Congruent and Incongruent tests. We don't know what the population parameters are, so we can't use the normal distribution. We'll be using the two-tailed test because we're only testing for a *difference*, and not if there's a directional difference between the congruent and incongruent reading times.  </br></br>
+**H~0~:** &mu;~C~ &ge; &mu;~I~ </br>
+**H~1~:** &mu;~C~ < &mu;~I~ </br>
+Where &mu;~C~ represents the average reading time for the Congruent population, and &mu;~I~ represents the average reading time for the Incongruent population.  </br> 
+Since we don't know what the population parameters are for the Congruent and Incongruent tests, we'll use the t-test. We can use the paired samples t-test, since we have the reading times of each subject on both the Congruent and Incongruent tests. And since we're testing for directional difference, we'll use the one-tailed t-test  </br></br>
 
 **Question 3: Report descriptive statistics**</br>
 Average of reading times:
@@ -60,12 +58,12 @@ ggplot(stroop) +
 </br>From the graph you can see there's an increase in reading time for the Incongruent test. Barring the outliers, it seems like the reading times might come from a normal distribution.  </br>
 
 **Question 5: Perform the statistical test and interpret your results**</br>
-As stated previously, we'll be using a two-tailed t-test to see if there's a significant difference in reading times between the Congruent and Incongruent tests. We can use the conventional &alpha; value of $0.05$. Since the sample size $24$, the Degrees of Freedom is $23$. Using this information, we can derive that the critical values of the t-statistic are $-2.068658$ and $2.068658$. 
+As stated previously, we'll be using a one-tailed t-test to see if the Incongruent values come from a population with a larger mean value than that of the Congruent test. We can use the conventional &alpha; value of $0.05$. Since the sample size $24$, the Degrees of Freedom is $23$. Using this information, we can derive that the critical value of the t-statistic $1.713872$. 
 
 Since we're only testing for a difference, and not *how much of* a difference, we'll be using this formula to calculate the t-statistic for the mean differences: $t = \frac{\overline{x}_{D} - 0}{s/\sqrt{n}}$, 
 where $\overline{x}_{D}$ signifies the average of the differences and $s$ the standard deviation of the differences.  </br>
 Calculating the t-statistic: $t = \frac{7.964792 - 0}{4.864827/\sqrt{24}} = 8.0207$ </br>
-Since $8.0207$ is larger than $2.068658$, we can reject the null hypthesis in favor of the alternative. </br>
+Since $8.0207$ is larger than $1.713872$, we can reject the null hypothesis in favor of the alternative. </br>
 
 This is in line with our expectations. When you do the test yourself, you can see that things get complicated when the words and font colours don't align. It's also quite obvious that there's a difference when you look at the density plots. Calculating Cohen's d: $\frac{M_{D}}{S_{D}} = \frac{7.964792}{0.9930286} = 8.020708$, which means that the standardized difference between the Congruent and Incongruent means is around 8 seconds. </br>
 
