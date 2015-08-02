@@ -21,7 +21,7 @@ Or rather: </br>
 **H~0~:** &mu;~C~ = &mu;~I~ </br>
 **H~1~:** &mu;~C~ &ne; &mu;~I~ </br>
 Where &mu;~C~ signifies the mean reading time for the Congruent test, and &mu;~I~ the mean reading time for the Incongruent test </br> </br>
-We should use the two-tailed t-test. We don't know what the population parameters are, so we can't use the normal distribution. Two-tailed because we're testing for a *difference*, and not if there's a directional difference between the congruent and incongruent reading times.  </br></br>
+We should use the paired samples t-test, since we have the reading time of each subject on both the Congruent and Incongruent tests. We don't know what the population parameters are, so we can't use the normal distribution. We'll be using the two-tailed test because we're only testing for a *difference*, and not if there's a directional difference between the congruent and incongruent reading times.  </br></br>
 
 **Question 3: Report descriptive statistics**</br>
 Average of reading times:
