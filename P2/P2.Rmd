@@ -19,7 +19,7 @@ For ggplot syntax - ggplot is slightly different in Python as opposed to R. </br
 #### <span style="color:DodgerBlue;">Statistical Test </span>
 **<span style="color:DodgerBlue;"> 1.1</span>** I decided on doing the Mann-Whitney test. By looking at the graph from the previous exercise, you can see that one can expect higher ridership on rainy days. The null hypothesis is that there is no difference in ridership between rainy and non-rainy days. The alternative would be that the ridership are higher on rainy days. Therefor we can use the one-tail test. For this test we'll use the conventional alpha value of 5%. </br>
 **<span style="color:DodgerBlue;"> 1.2</span>** The Mann-Whitney test is non-parametric, which means we don't have to make any assumptions regarding the underlying distribution of the ridership. The Mann-Whitney test uses rank sum statistics to make inference on shifts between data sets. By using ranks, you forgo any need to make assumptions on the data.</br> 
-**<span style="color:DodgerBlue;"> 1.3</span>** The U statistic from the test by itself (1924409167) doesn't say much, but the corresponding p-value is 0.025 (rounded to 3 digits), which means that the probability of getting this U values is 2.5%. The mean ridership means are 1105.446, 1090.279 for rainy and non-rainy days respectively.  </br> 
+**<span style="color:DodgerBlue;"> 1.3</span>** The U statistic from the test by itself (1924409167) doesn't say much, but the corresponding p-value is 0.025 (rounded to 3 digits), which means that the probability of getting this U value under the null hypothesis is 2.5%. The mean ridership means are 1105.446, 1090.279 for rainy and non-rainy days respectively.  </br> 
 **<span style="color:DodgerBlue;"> 1.3</span>** With a p-value of less than 5%, we can safely reject the null hypothesis in favor of the alternative. In other words, there is a significant increase in ridership on rainy days, as opposed to non-rainy days.</br> 
 
 ### <span style="color:DodgerBlue;">Section 2.</span>
@@ -41,13 +41,80 @@ For ggplot syntax - ggplot is slightly different in Python as opposed to R. </br
 
 Feature | coefficient
 --- | --- | ---
-rain | 56.014
-meanwindspdi | 51.767
+Rain | 56.014
+Mean wind speed | 51.767
 Hour | 65.3
-fog | 139.522
-maxtempi | 25.892
-meantempi | -23.807
+Fog | 139.522
+Maximum temperature | 25.892
+Mean temperature | -23.807
 
 **<span style="color:DodgerBlue;"> 2.5</span>** The $R^2$ value for this model is 0.493.
 
-**<span style="color:DodgerBlue;"> 2.6</span>** To judge a model's accuracy can be subjective, especially if the $R^2$ value is not too close to either 0 or 1. An $R^2$ value too close 1 means you over fit your model, which is not a very good idea. Having played around with the features, I think this is a relatively good $R^2$ value, but other modelling techniques might prove to be more accurate. Linear models aren't always the best models to use to predict your dependent variables. I've found that a biased sample can through your model completely off. It might be a good idea to bootstrap your data, and ensemble a few linear models. I'm a big fan of Random Forest models, but they can become monsters if you have too many variables. In this case we have an additional 495 features (465 Unit dummy variables and 30 date variables), so a Random Forest might not be the nicest solution. 
+**<span style="color:DodgerBlue;"> 2.6</span>** To judge a model's accuracy can be subjective, especially if the $R^2$ value is not close to either 0 or 1. An $R^2$ value too close 1 means you over fit your model, which is not a very good idea. Having played around with the features, I think this is a relatively good $R^2$ value, but other modelling techniques might prove to be more accurate. Linear models aren't always the best models to use to predict your dependent variables. I've found that a biased sample can throw your model completely off. It might be a good idea to bootstrap your data, and ensemble a few linear models. I'm a big fan of Random Forest models, but they can become monsters if you have too many variables. In this case we have an additional 495 features (465 Unit dummy variables and 30 date variables), so a Random Forest might by a costly solution. 
+
+
+### <span style="color:DodgerBlue;">Section 3.</span>
+#### <span style="color:DodgerBlue;">Visualization </span>
+
+**<span style="color:DodgerBlue;"> Graph 1</span>**
+**<span style="color:DodgerBlue;"> Histogram of ridership on rainy and non-rainy days</span>**
+```{r, echo=FALSE, cache = T,fig.width=8, fig.height=7.5}
+library(reshape2)
+library(ggplot2)
+library(scales)
+turn.data <- read.csv('C:/Github/DataAnalystNanodegree/P2/Data Visualizing/turnstile_data_master_with_weather.csv', row.names = NULL)
+turn.data$X <- NULL
+
+turn.data$DATEn <- as.Date(turn.data$DATEn)
+turn.data$TIMEn <- format(strptime(as.character(turn.data$TIMEn), format = '%H:%M:%S'), format = '%H:%M:%S')
+turn.data$weekday <- weekdays(turn.data$DATEn)
+turn.data$rain <- as.factor(turn.data$rain)
+levels(turn.data$rain) <- c('No Rain', 'Rain')
+
+daily.entries <- aggregate(data = turn.data, ENTRIESn_hourly  ~ DATEn + rain, FUN = 'sum' )
+daily.exits <- aggregate(data = turn.data, EXITSn_hourly  ~ DATEn + rain, FUN = 'sum' )
+
+daily.commute <- merge(daily.entries, daily.exits, by = 'DATEn')
+daily.commute$rain.y <- NULL
+colnames(daily.commute) <- c('Date', 'Rain','Entries_hourly', 'Exits_hourly')
+
+ggplot(turn.data) + 
+  geom_histogram(aes(x = ENTRIESn_hourly, fill = rain, col = rain), binwidth=500, alpha = .65) +facet_grid(.~rain) +
+  scale_x_continuous(limits = c(0, 6000)) +
+  theme(panel.background = element_blank(),
+        legend.title = element_blank()) +
+  xlab('Hourly entries') +
+  ylab('Frequency')+
+  ggtitle('Histogram of ridership on rainy and non-rainy days')
+```
+
+**<span style="color:DodgerBlue;"> Graph 2</span>**
+**<span style="color:DodgerBlue;"> Histogram of ridership on rainy and non-rainy days</span>**
+```{r, echo = FALSE, fig.width=8, fig.height=7.5}
+library(reshape2)
+library(ggplot2)
+library(scales)
+week.of.day <- aggregate(data = turn.data, ENTRIESn_hourly ~ weekday + Hour + rain, 'sum')
+
+ggplot(week.of.day) +
+  geom_line(aes(x = Hour, y = ENTRIESn_hourly), col = 'dodgerblue3') + 
+  facet_grid(weekday ~ rain)+
+  theme(panel.background = element_rect(fill = '#FCFDFE'),
+        legend.title = element_blank()) +
+  scale_y_continuous(labels = comma)+
+  xlab('Hour of the day') +
+  ylab('Hourly entries') +
+  ggtitle('Ridership during the day for each day of the week \non rainy and non-rainy days')
+
+```
+
+### <span style="color:DodgerBlue;">Section 4.</span>
+#### <span style="color:DodgerBlue;">Conclusions </span>
+**<span style="color:DodgerBlue;"> 4.1</span>** It might not be so simple to reason whether more or less people would use the subway on rainy days. On the one hand, you'd expect that people would rather make use of their own transport to avoid getting to the subway station. But on the other hand, you will get more subway commuters who would rather not take the buss or jog/cycle to work. From the descriptive statistics and the plots you can see there's a difference in ridership between rainy and non-rainy days, with ridership increasing on rainy days. By using statistical analysis you can show the difference is significant.
+
+**<span style="color:DodgerBlue;"> 4.2</span>** The plots presented here might give the appearance that the ridership is higher on non-rainy days. But if you look at the mean ridership for rainy and non-rainy days, you might want to investigate a bit further. The Mann-Whitney helped us to come to the conclusion that the ridership goes up on rainy days. From the linear model's features you can see that weather patterns have a huge impact on ridership. 
+
+### <span style="color:DodgerBlue;">Section 5.</span>
+#### <span style="color:DodgerBlue;">Reflection </span>
+**<span style="color:DodgerBlue;"> 5.1</span>** The data set only contains data for one month (May 2011), which naturally is not representative of all the seasons. There might also be other factors that can have an impact on ridership, like construction on the railways/stations, special events in NYC and a change in tariffs. The influence of these factors might only become apparent if you have data for a longer time period.  As mentioned previously, a linear model might not be the best option, especially considering we're only using one month's worth of data. Using bootstrapping will help to decrease possible bias. We also only tested if there's a difference in ridership between rainy and non-rainy days (which is quite small actually), we can also test for size of the difference. 
+

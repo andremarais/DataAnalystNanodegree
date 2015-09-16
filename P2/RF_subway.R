@@ -17,7 +17,7 @@ daily.commute <- merge(daily.entries, daily.exits, by = 'DATEn')
 daily.commute$rain.y <- NULL
 colnames(daily.commute) <- c('Date', 'Rain','Entries_hourly', 'Exits_hourly')
 
-graph1 <- ggplot(turn.data) + 
+ggplot(turn.data) + 
   geom_histogram(aes(x = ENTRIESn_hourly, fill = rain, col = rain), binwidth=500, alpha = .65) +facet_grid(.~rain) +
   scale_x_continuous(limits = c(0, 6000)) +
   theme(panel.background = element_blank(),
@@ -30,7 +30,7 @@ week.of.day <- aggregate(data = turn.data, ENTRIESn_hourly ~ weekday + Hour, 'su
 
 ggplot(week.of.day) +
   geom_line(aes(x = Hour, y = ENTRIESn_hourly)) + 
-  facet_grid(weekday ~.)
+  facet_grid(. ~ rain)
 
 
 
