@@ -17,10 +17,10 @@ For ggplot syntax - ggplot is slightly different in Python as opposed to R. </br
 
 ### <span style="color:DodgerBlue;">Section 1.</span>
 #### <span style="color:DodgerBlue;">Statistical Test </span>
-**<span style="color:DodgerBlue;"> 1.1</span>** I decided on doing the Mann-Whitney test. By looking at the graph from the previous exercise, you can see that one can expect higher ridership on rainy days. The null hypothesis is that there is no difference in ridership between rainy and non-rainy days. The alternative would be that the ridership are higher on rainy days. Therefor we can use the one-tail test. For this test we'll use the conventional alpha value of 5%. </br>
+**<span style="color:DodgerBlue;"> 1.1</span>** I decided on doing the Mann-Whitney test. By looking at the graph from the previous exercise, you can see that there is definately a difference in ridership between rainy and rainy days - but the direction might not be so clear just yet. The null hypothesis is that there is no difference in ridership between rainy and non-rainy days. The alternative would be that there is a difference in ridership between rainy and non-rainy days. Therefor we can use the wto-tailed test. For this test we'll use the conventional alpha value of 5%. </br>
 **<span style="color:DodgerBlue;"> 1.2</span>** The Mann-Whitney test is non-parametric, which means we don't have to make any assumptions regarding the underlying distribution of the ridership. The Mann-Whitney test uses rank sum statistics to make inference on shifts between data sets. By using ranks, you forgo any need to make assumptions on the data.</br> 
-**<span style="color:DodgerBlue;"> 1.3</span>** The U statistic from the test by itself (1924409167) doesn't say much, but the corresponding p-value is 0.025 (rounded to 3 digits), which means that the probability of getting this U value under the null hypothesis is 2.5%. The mean ridership means are 1105.446, 1090.279 for rainy and non-rainy days respectively.  </br> 
-**<span style="color:DodgerBlue;"> 1.3</span>** With a p-value of less than 5%, we can safely reject the null hypothesis in favor of the alternative. In other words, there is a significant increase in ridership on rainy days, as opposed to non-rainy days.</br> 
+**<span style="color:DodgerBlue;"> 1.3</span>** The U statistic from the test by itself (1924409167) doesn't say much, but the corresponding p-value is 0.05 (rounded to 3 digits), which means that the probability of getting this U value under the null hypothesis is 5%. The mean ridership means are 1105.446, 1090.279 for rainy and non-rainy days respectively.  </br> 
+**<span style="color:DodgerBlue;"> 1.3</span>** With a p-value of less than 5%, we can safely reject the null hypothesis in favor of the alternative. In other words, there is a significant difference in ridership on rainy days, as opposed to non-rainy days.</br> 
 
 ### <span style="color:DodgerBlue;">Section 2.</span>
 #### <span style="color:DodgerBlue;">Linear Regression </span>
@@ -28,7 +28,7 @@ For ggplot syntax - ggplot is slightly different in Python as opposed to R. </br
 **<span style="color:DodgerBlue;"> 2.2 & 2.3</span>** Here's a list of the features I used, with the reasoning behind it: </br>
 
 <ul>
-<li>Rain: Ridership will pick up on rainy days, since commuters might rather take the train instead of making use of the buses or their own vehicles for safety reasons. </li>
+<li>Rain: Ridership might pick up on rainy days, since commuters might rather take the train instead of making use of the buses or their own vehicles for safety reasons. </li>
 <li>Mean wind speed: No one likes standing outside on a windy day.</li>
 <li>Hour of the day: Hour to pick up on the daily ridership pattern
 <li>Fog indicator: Reduced visibility might persuade commuters to rather make use of the subway instead of using their own vehicles</li></li>
@@ -48,9 +48,9 @@ Fog | 139.522
 Maximum temperature | 25.892
 Mean temperature | -23.807
 
-**<span style="color:DodgerBlue;"> 2.5</span>** The $R^2$ value for this model is 0.493.
+**<span style="color:DodgerBlue;"> 2.5</span>** The $R^2$ value for this model is 0.493. The $R^2$ values indicates how closely the model's predicted values fit the actual data. In other words, by using the mentioed features, the model explains 49.3% of the variability from the actual data.
 
-**<span style="color:DodgerBlue;"> 2.6</span>** To judge a model's accuracy can be subjective, especially if the $R^2$ value is not close to either 0 or 1. An $R^2$ value too close 1 means you over fit your model, which is not a very good idea. Having played around with the features, I think this is a relatively good $R^2$ value, but other modelling techniques might prove to be more accurate. Linear models aren't always the best models to use to predict your dependent variables. I've found that a biased sample can throw your model completely off. It might be a good idea to bootstrap your data, and ensemble a few linear models. I'm a big fan of Random Forest models, but they can become monsters if you have too many variables. In this case we have an additional 495 features (465 Unit dummy variables and 30 date variables), so a Random Forest might by a costly solution. 
+**<span style="color:DodgerBlue;"> 2.6</span>** To judge a model's accuracy can be subjective, especially if the $R^2$ value is not close to either 0 or 1. An $R^2$ value too close 1 means you **might** have overfitted the model. While the dream is to have a perfect fit for your data, it might be worth investigating if you might not have an overfitted model.Having played around with the features, I think this is a relatively good $R^2$ value, but other modelling techniques might prove to be more accurate. Linear models aren't always the best models to use to predict your dependent variables. I've found that a biased sample can throw your model completely off. It might be a good idea to bootstrap your data, and ensemble a few linear models. I'm a big fan of Random Forest models, but they can become monsters if you have too many variables. In this case we have an additional 495 features (465 Unit dummy variables and 30 date variables), so a Random Forest might by a costly solution. 
 
 
 ### <span style="color:DodgerBlue;">Section 3.</span>

@@ -1,4 +1,4 @@
-
+library(scales)
 library(reshape2)
 library(ggplot2)
 turn.data <- read.csv('C:/Github/DataAnalystNanodegree/P2/Data Visualizing/turnstile_data_master_with_weather.csv', row.names = NULL)
@@ -26,13 +26,33 @@ ggplot(turn.data) +
   ylab('Frequency')+
   ggtitle('Histogram of ridership on rainy and non-rainy days')
 
-week.of.day <- aggregate(data = turn.data, ENTRIESn_hourly ~ weekday + Hour, 'sum')
+week.of.day <- aggregate(data = turn.data, ENTRIESn_hourly ~ weekday + Hour + rain, 'sum')
 
 ggplot(week.of.day) +
-  geom_line(aes(x = Hour, y = ENTRIESn_hourly)) + 
-  facet_grid(. ~ rain)
+  geom_line(aes(x = Hour, y = ENTRIESn_hourly), col = 'dodgerblue3') + 
+  facet_grid(weekday ~ rain)+
+  theme(panel.background = element_rect(fill = '#E7F1FA'),
+        legend.title = element_blank()) +
+  scale_y_continuous(labels = comma)+
+  xlab('Hour of the day') +
+  ylab('Hourly entries') +
+  ggtitle('Ridership during the day for each day of the week on rainy and non-rainy days')
 
 
+
+unit.rain <- aggregate(data = turn.data, ENTRIESn_hourly ~ UNIT + rain, 'mean')
+
+ggplot(unit.rain) + geom_bar(aes(x = reorder(UNIT,-ENTRIESn_hourly), y=ENTRIESn_hourly, position = 'dodge', fill = rain, col = rain), stat ='identity') #+ facet_grid(rain ~.)
+
+
+turn.lm <- lm(ENTRIESn_hourly ~  rain + meanwindspdi + Hour + fog + maxtempi + meantempi + as.factor(UNIT), data = turn.data, importance = T)
+
+# Rain | 56.014
+# Mean wind speed | 51.767
+# Hour | 65.3
+# Fog | 139.522
+# Maximum temperature | 25.892
+# Mean temperature | -23.807
 
 #
 #dcast(df_melt, year + month ~ variable, sum)
