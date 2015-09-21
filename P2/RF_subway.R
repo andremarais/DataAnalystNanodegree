@@ -45,9 +45,24 @@ unit.rain <- aggregate(data = turn.data, ENTRIESn_hourly ~ UNIT + rain, 'mean')
 ggplot(unit.rain) + geom_bar(aes(x = reorder(UNIT,-ENTRIESn_hourly), y=ENTRIESn_hourly, position = 'dodge', fill = rain, col = rain), stat ='identity') #+ facet_grid(rain ~.)
 
 
-turn.lm <- lm(ENTRIESn_hourly ~  rain + meanwindspdi + Hour + fog + maxtempi + meantempi + as.factor(UNIT), data = turn.data, importance = T)
+#turn.lm <- lm(ENTRIESn_hourly ~  rain + meanwindspdi + Hour + fog + maxtempi + meantempi + as.factor(UNIT), data = turn.data, importance = T)
 
-ggplot(turn.data) + geom_line(aes(x ))
+turn.data.ecdf <- ecdf(turn.data$entriesn_hourly - turn.data$predictions)
+
+ggplot() + 
+  geom_line(aes(x =environment(turn.data.ecdf)$x, y = environment(turn.data.ecdf)$y), col = 'dodgerblue3')+
+  theme(panel.background = element_rect(fill = '#E7F1FA'),
+        legend.title = element_blank())+
+  xlab('Risiduals')+
+  ylab('Cumulative Probability')+
+  ggtitle('Cumulative Probability of the Hourly Entries predictions')
+
+
+ggplot(turn.data) + geom_histogram(aes(x = (turn.data$entriesn_hourly - turn.data$predictions)), binwidth = range(turn.data$entriesn_hourly - turn.data$predictions)/60)
+  
+
+
+
 
 
 
