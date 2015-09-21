@@ -1,24 +1,24 @@
 library(scales)
 library(reshape2)
 library(ggplot2)
-turn.data <- read.csv('C:/Github/DataAnalystNanodegree/P2/Data Visualizing/turnstile_data_master_with_weather.csv', row.names = NULL)
+turn.data <- read.csv('C:/Github/DataAnalystNanodegree/P2/turnstile_data_master_with_weather_pred.csv', row.names = NULL)
 turn.data$X <- NULL
 
-turn.data$DATEn <- as.Date(turn.data$DATEn)
-turn.data$TIMEn <- format(strptime(as.character(turn.data$TIMEn), format = '%H:%M:%S'), format = '%H:%M:%S')
-turn.data$weekday <- weekdays(turn.data$DATEn)
+turn.data$daten <- as.Date(turn.data$daten, format = "%Y-%m-%d")
+turn.data$timen <- format(strptime(as.character(turn.data$timen), format = '%H:%M:%S'), format = '%H:%M:%S')
+turn.data$weekday <- weekdays(turn.data$daten)
 turn.data$rain <- as.factor(turn.data$rain)
 levels(turn.data$rain) <- c('No Rain', 'Rain')
 
-daily.entries <- aggregate(data = turn.data, ENTRIESn_hourly  ~ DATEn + rain, FUN = 'sum' )
-daily.exits <- aggregate(data = turn.data, EXITSn_hourly  ~ DATEn + rain, FUN = 'sum' )
+daily.entries <- aggregate(data = turn.data, entriesn_hourly  ~ daten + rain, FUN = 'sum' )
+daily.exits <- aggregate(data = turn.data, exitsn_hourly  ~ daten + rain, FUN = 'sum' )
 
-daily.commute <- merge(daily.entries, daily.exits, by = 'DATEn')
+daily.commute <- merge(daily.entries, daily.exits, by = 'daten')
 daily.commute$rain.y <- NULL
 colnames(daily.commute) <- c('Date', 'Rain','Entries_hourly', 'Exits_hourly')
 
 ggplot(turn.data) + 
-  geom_histogram(aes(x = ENTRIESn_hourly, fill = rain, col = rain), binwidth=500, alpha = .65) +facet_grid(.~rain) +
+  geom_histogram(aes(x = entriesn_hourly, fill = rain, col = rain), binwidth=500, alpha = .65) +facet_grid(.~rain) +
   scale_x_continuous(limits = c(0, 6000)) +
   theme(panel.background = element_blank(),
         legend.title = element_blank()) +
@@ -26,10 +26,10 @@ ggplot(turn.data) +
   ylab('Frequency')+
   ggtitle('Histogram of ridership on rainy and non-rainy days')
 
-week.of.day <- aggregate(data = turn.data, ENTRIESn_hourly ~ weekday + Hour + rain, 'sum')
+week.of.day <- aggregate(data = turn.data, entriesn_hourly ~ weekday + hour + rain, 'sum')
 
 ggplot(week.of.day) +
-  geom_line(aes(x = Hour, y = ENTRIESn_hourly), col = 'dodgerblue3') + 
+  geom_line(aes(x = hour, y = entriesn_hourly), col = 'dodgerblue3') + 
   facet_grid(weekday ~ rain)+
   theme(panel.background = element_rect(fill = '#E7F1FA'),
         legend.title = element_blank()) +
@@ -47,12 +47,9 @@ ggplot(unit.rain) + geom_bar(aes(x = reorder(UNIT,-ENTRIESn_hourly), y=ENTRIESn_
 
 turn.lm <- lm(ENTRIESn_hourly ~  rain + meanwindspdi + Hour + fog + maxtempi + meantempi + as.factor(UNIT), data = turn.data, importance = T)
 
-# Rain | 56.014
-# Mean wind speed | 51.767
-# Hour | 65.3
-# Fog | 139.522
-# Maximum temperature | 25.892
-# Mean temperature | -23.807
+ggplot(turn.data) + geom_line(aes(x ))
+
+
 
 #
 #dcast(df_melt, year + month ~ variable, sum)
