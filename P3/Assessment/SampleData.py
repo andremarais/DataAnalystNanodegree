@@ -3,8 +3,8 @@
 
 import xml.etree.ElementTree as ET  # Use cElementTree or lxml if too slow
 
-OSM_FILE = "C:/Github/DataAnalystNanodegree/P3/Assessment/cape-town_south-africa.osm"  # Replace this with your osm file
-SAMPLE_FILE = "C:/Github/DataAnalystNanodegree/P3/Assessment/CT-sample.osm"
+OSM_FILE = "C:/Github/DataAnalystNanodegree/P3/Assessment/CT-sample.osm"  # Replace this with your osm file
+SAMPLE_FILE = "C:/Github/DataAnalystNanodegree/P3/Assessment/CT-sample2.osm"
 
 
 def get_element(osm_file, tags=('node', 'way', 'relation')):
